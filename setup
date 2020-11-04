@@ -536,6 +536,10 @@ create_basic_layout() {
     *) mkfs."$FILE_SYSTEM" "$ROOT_PART" &> /dev/null ;;
   esac
   mount "$ROOT_PART" /mnt
+  #Extra Code for btrfs
+  btrfs su cr /mnt/@
+  umount /mnt
+  mount -o compress=lzo,subvol=@ /dev/"$ROOT_PART" /mnt
   if [ $? -eq 0 ]; then
     mounted=true
   fi
@@ -574,6 +578,10 @@ create_lvm_layout() {
     *) mkfs."$FILE_SYSTEM" "/dev/${LVM_GROUP}/${LVM_ROOT}" &> /dev/null ;;
   esac
   mount "/dev/${LVM_GROUP}/${LVM_ROOT}" /mnt
+  #Extra Code for btrfs
+  btrfs su cr /mnt/@
+  umount /mnt
+  mount -o compress=lzo,subvol=@ "/dev/${LVM_GROUP}/${LVM_ROOT}" /mnt
   if [ $? -eq 0 ]; then
     mounted=true
   fi
@@ -656,6 +664,10 @@ process? If you choose yes, you will be returned to the partition menu." 7 65
     *) mkfs."$FILE_SYSTEM" "/dev/mapper/${LVM_GROUP}-${LVM_ROOT}" &> /dev/null ;;
   esac
   mount "/dev/mapper/${LVM_GROUP}-${LVM_ROOT}" /mnt
+  #Extra Code for btrfs
+  btrfs su cr /mnt/@
+  umount /mnt
+  mount -o compress=lzo,subvol=@ "/dev/mapper/${LVM_GROUP}-${LVM_ROOT}" /mnt
   if [ $? -eq 0 ]; then
     mounted=true
   fi
